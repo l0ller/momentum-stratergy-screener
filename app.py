@@ -59,15 +59,24 @@ def load_nifty500_symbols():
 
 def calculate_obv(df):
     """Calculate On-Balance Volume"""
-    obv = [0] * len(df)
+    if df.empty or len(df) < 2:
+        return pd.Series([], dtype=float)
+    
+    obv = [0.0] * len(df)
+    
+    # Ensure Close and Volume are pandas Series with proper values
+    close_values = df['Close'].values if hasattr(df['Close'], 'values') else df['Close']
+    volume_values = df['Volume'].values if hasattr(df['Volume'], 'values') else df['Volume']
+    
     for i in range(1, len(df)):
-        if df['Close'].iloc[i] > df['Close'].iloc[i-1]:
-            obv[i] = obv[i-1] + df['Volume'].iloc[i]
-        elif df['Close'].iloc[i] < df['Close'].iloc[i-1]:
-            obv[i] = obv[i-1] - df['Volume'].iloc[i]
+        if close_values[i] > close_values[i-1]:
+            obv[i] = obv[i-1] + volume_values[i]
+        elif close_values[i] < close_values[i-1]:
+            obv[i] = obv[i-1] - volume_values[i]
         else:
             obv[i] = obv[i-1]
-    return pd.Series(obv, index=df.index)
+    
+    return pd.Series(obv, index=df.index, name='OBV')
 
 @st.cache_data(ttl=3600)  # Cache for 1 hour
 def download_and_screen_stocks(symbols, adx_thresh, max_risk_pct, atr_mult):
@@ -92,6 +101,27 @@ def download_and_screen_stocks(symbols, adx_thresh, max_risk_pct, atr_mult):
             
             if df.empty or len(df) < 50:
                 debug_data.append({'Symbol': symbol, 'Issue': 'No data or insufficient data'})
+                continue
+            
+            # Handle multi-index columns from yfinance
+            if isinstance(df.columns, pd.MultiIndex):
+                df.columns = df.columns.droplevel(1)
+            
+            # Ensure we have the required columns
+            required_cols = ['Open', 'High', 'Low', 'Close', 'Volume']
+            if not all(col in df.columns for col in required_cols):
+                debug_data.append({'Symbol': symbol, 'Issue': f'Missing required columns. Available: {list(df.columns)}'})
+                continue
+            
+            # Convert to numeric and handle any data type issues
+            for col in required_cols:
+                df[col] = pd.to_numeric(df[col], errors='coerce')
+            
+            # Drop any rows with NaN values in basic data
+            df = df.dropna(subset=required_cols)
+            
+            if len(df) < 50:
+                debug_data.append({'Symbol': symbol, 'Issue': 'Insufficient clean data after processing'})
                 continue
                 
             successful_downloads += 1
@@ -214,11 +244,44 @@ def create_stock_chart(symbol):
             st.error(f"No data available for {symbol}")
             return
         
+        # Handle multi-index columns from yfinance
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = df.columns.droplevel(1)
+        
+        # Ensure we have required columns
+        required_cols = ['Open', 'High', 'Low', 'Close', 'Volume']
+        if not all(col in df.columns for col in required_cols):
+            st.error(f"Missing required columns for {symbol}. Available: {list(df.columns)}")
+            return
+        
+        # Convert to numeric
+        for col in required_cols:
+            df[col] = pd.to_numeric(df[col], errors='coerce')
+        
+        # Drop NaN rows
+        df = df.dropna(subset=required_cols)
+        
+        if df.empty:
+            st.error(f"No valid data after cleaning for {symbol}")
+            return
+        
         # Calculate indicators
         df['DMA20'] = SMAIndicator(close=df['Close'], window=20).sma_indicator()
         df['DMA50'] = SMAIndicator(close=df['Close'], window=50).sma_indicator()
         df['OBV'] = calculate_obv(df)
-        df['OBV_SMA9'] = SMAIndicator(close=df['OBV'], window=9).sma_indicator()
+        
+        # Calculate OBV SMA 9 safely
+        if not df['OBV'].empty and len(df['OBV']) >= 9:
+            df['OBV_SMA9'] = SMAIndicator(close=df['OBV'], window=9).sma_indicator()
+        else:
+            df['OBV_SMA9'] = df['OBV']  # Use OBV directly if not enough data for SMA
+        
+        # Drop NaN rows from indicators
+        df = df.dropna()
+        
+        if df.empty:
+            st.error(f"No data remaining after indicator calculation for {symbol}")
+            return
         
         # Create subplots
         fig = make_subplots(
