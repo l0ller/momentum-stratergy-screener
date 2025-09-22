@@ -1,5 +1,3 @@
-
-
 import streamlit as st
 import pandas as pd
 import yfinance as yf
@@ -52,11 +50,10 @@ st.markdown("""
 # Helper functions
 @st.cache_data
 def load_nifty500_symbols():
-    """Load NIFTY 500 symbols from a predefined list or API"""
-    # You can replace this with your actual symbol loading logic
-    # For demo purposes, using a subset of popular NIFTY 500 stocks
+    """Load NIFTY 500 symbols from a comprehensive list"""
+    # Complete NIFTY 500 symbol list
     symbols = [
-'NETWEB.NS', 'FIRSTCRY.NS', 'GMDCLTD.NS', 'IDEA.NS', 'SKFINDIA.NS', 'GODFRYPHLP.NS', 'RTNINDIA.NS', 'JPPOWER.NS', 'BSE.NS', 'SCHNEIDER.NS', 'NIVABUPA.NS', 'RBLBANK.NS', 'INDUSTOWER.NS', 'SWIGGY.NS', 'ABFRL.NS', 'BEML.NS', 'INDGN.NS', 'APTUS.NS', 'GLENMARK.NS', 'CUB.NS', 'COHANCE.NS', 'KFINTECH.NS', 'CLEAN.NS', 'NATIONALUM.NS', 'ASHOKLEY.NS', 'GODREJAGRO.NS', 'MSUMI.NS', 'ASTRAL.NS', 'GRAVITA.NS', 'CENTURYPLY.NS', 'LEMONTREE.NS', 'RENUKA.NS', 'M&MFIN.NS', 'EICHERMOT.NS', 'HYUNDAI.NS', 'M&M.NS', 'VEDL.NS', 'MMTC.NS', 'VOLTAS.NS', 'CHOLAFIN.NS', 'PNCINFRA.NS', 'GODREJIND.NS', 'CAMPUS.NS', 'CAMS.NS', 'EXIDEIND.NS', 'KARURVYSYA.NS', 'VIJAYA.NS', 'NSLNISP.NS', 'BIOCON.NS', 'ARE&M.NS', 'IGIL.NS', 'ANGELONE.NS', 'SWANCORP.NS', 'IRFC.NS', 'SHRIRAMFIN.NS', 'MARUTI.NS', 'ESCORTS.NS', 'IRCON.NS', 'IOB.NS', 'SARDAEN.NS', 'NMDC.NS', 'TBOTEK.NS', 'PPLPHARMA.NS', 'VGUARD.NS', 'JSL.NS', 'RITES.NS', 'JYOTICNC.NS', 'NYKAA.NS', 'MRPL.NS', 'TTML.NS', 'GVT&D.NS', 'HBLENGINE.NS', 'RHIM.NS', 'SAIL.NS', 'SAILIFE.NS', 'MAHABANK.NS', 'PHOENIXLTD.NS', 'DRREDDY.NS', 'UNOMINDA.NS', 'CHENNPETRO.NS', 'POWERGRID.NS', 'IREDA.NS', 'TVSMOTOR.NS', 'AMBER.NS', 'BDL.NS', 'TANLA.NS', 'AFFLE.NS', 'JMFINANCIL.NS', 'WELSPUNLIV.NS', 'PNBHOUSING.NS', 'ABCAPITAL.NS', 'PVRINOX.NS', 'JSWHL.NS', 'KAYNES.NS', 'JBMA.NS', 'PRAJIND.NS', 'RELIANCE.NS', 'ZEEL.NS', 'INOXWIND.NS', 'AEGISLOG.NS', 'LTF.NS', 'PFC.NS', 'AUROPHARMA.NS', 'NUVAMA.NS', 'AAVAS.NS', 'CANBK.NS', 'ENGINERSIN.NS', 'PAYTM.NS', 'J&KBANK.NS', 'ROUTE.NS', 'FIVESTAR.NS', 'DATAPATTNS.NS', 'CDSL.NS', 'ETERNAL.NS', 'NBCC.NS', 'NAUKRI.NS', 'LAURUSLABS.NS', 'AADHARHFC.NS', 'KPITTECH.NS', 'CHALET.NS', 'RVNL.NS', 'LTFOODS.NS', 'SUZLON.NS', 'TATAMOTORS.NS', 'CHOLAHLDNG.NS', 'IIFL.NS', 'BHEL.NS', 'JKTYRE.NS', 'GLAND.NS', 'SBILIFE.NS', 'TATAPOWER.NS', 'TATAELXSI.NS', 'HINDALCO.NS', 'HINDCOPPER.NS', 'HOMEFIRST.NS', 'SAMMAANCAP.NS', 'HINDZINC.NS', 'AJANTPHARM.NS', 'UCOBANK.NS', 'HDFCLIFE.NS', 'IKS.NS', 'BHARATFORG.NS', 'IFCI.NS', 'SONACOMS.NS', 'YESBANK.NS', 'OIL.NS', 'ANANTRAJ.NS', 'RECLTD.NS', 'BHARTIARTL.NS', 'BANKINDIA.NS', 'ALKEM.NS', 'SIGNATURE.NS', 'RPOWER.NS', 'SJVN.NS', 'GRSE.NS', 'MFSL.NS', 'KPIL.NS', 'SUNPHARMA.NS', 'BAJAJFINSV.NS', 'NTPCGREEN.NS', 'MANAPPURAM.NS', 'CAPLIPOINT.NS', 'SHYAMMETL.NS', '360ONE.NS', 'TATASTEEL.NS', 'WAAREEENER.NS', 'TITAGARH.NS', 'IDFCFIRSTB.NS', 'BANDHANBNK.NS', 'RAYMOND.NS', 'AXISBANK.NS', 'BERGEPAINT.NS', 'ASIANPAINT.NS', 'BSOFT.NS', 'HUDCO.NS', 'MAXHEALTH.NS', 'JUBLPHARMA.NS', 'FINCABLES.NS', 'JUBLFOOD.NS', 'USHAMART.NS', 'UNIONBANK.NS', 'MINDACORP.NS', 'INDUSINDBK.NS', 'HDFCAMC.NS', 'CONCOR.NS', 'COALINDIA.NS', 'PEL.NS', 'VMM.NS', 'ENDURANCE.NS', 'IRCTC.NS', 'WOCKPHARMA.NS', 'TRIVENI.NS', 'DEVYANI.NS', 'BOSCHLTD.NS', 'RAILTEL.NS', 'BANKBARODA.NS', 'TARIL.NS', 'BLUEDART.NS', 'HEROMOTOCO.NS', 'TATACONSUM.NS', 'MOTILALOFS.NS', 'FEDERALBNK.NS', 'POLYMED.NS', 'JSWENERGY.NS', 'NETWORK18.NS', 'SUNDARMFIN.NS', 'ABSLAMC.NS', 'ACMESOLAR.NS', 'ZYDUSLIFE.NS', 'ZENTEC.NS', 'IOC.NS', 'CEATLTD.NS', 'KANSAINER.NS', 'ADANIPOWER.NS', 'BAJAJHFL.NS', 'KIMS.NS', 'BAJFINANCE.NS', 'LUPIN.NS', 'EMCURE.NS', 'ASTERDM.NS', 'JSWSTEEL.NS', 'GPPL.NS', 'WELCORP.NS', 'PNB.NS', 'STARHEALTH.NS', 'JIOFIN.NS', 'MAZDOCK.NS', 'CESC.NS', 'INDHOTEL.NS', 'ADANIENT.NS', 'LICHSGFIN.NS', 'HDFCBANK.NS', 'INDIANB.NS', 'TATAINVEST.NS', 'MUTHOOTFIN.NS', 'KALYANKJIL.NS', 'SBICARD.NS', 'ALOKINDS.NS', 'SAREGAMA.NS', 'BPCL.NS', 'LTIM.NS', 'ADANIGREEN.NS', 'ASTRAZEN.NS', 'MOTHERSON.NS', 'PGEL.NS', 'INDIAMART.NS', 'CRAFTSMAN.NS', 'DALBHARAT.NS', 'JINDALSTEL.NS', 'AUBANK.NS', 'IDBI.NS', 'BAJAJ-AUTO.NS', 'WHIRLPOOL.NS', 'DEEPAKNTR.NS', 'SUNDRMFAST.NS', 'CONCORDBIO.NS', 'SBFC.NS', 'HFCL.NS', 'MAPMYINDIA.NS', 'RKFORGE.NS', 'GICRE.NS', 'CGCL.NS', 'JWL.NS', 'POONAWALLA.NS', 'KPRMILL.NS', 'CRISIL.NS', 'SWSOLAR.NS', 'NCC.NS', 'BRITANNIA.NS', 'AFCONS.NS', 'INOXINDIA.NS', 'HSCL.NS', 'DIXON.NS', 'BIKAJI.NS', 'BLUESTARCO.NS', 'GRASIM.NS', 'EIHOTEL.NS', 'TRIDENT.NS', 'GRANULES.NS', 'LICI.NS', 'HONASA.NS', 'ADANIENSOL.NS', 'AMBUJACEM.NS', 'SHREECEM.NS', 'LATENTVIEW.NS', 'CARBORUNIV.NS', 'DELHIVERY.NS', 'TIMKEN.NS', 'DCMSHRIRAM.NS', 'DLF.NS', 'CROMPTON.NS', 'HINDPETRO.NS', 'TATATECH.NS', 'NAVA.NS', 'MGL.NS', 'POLYCAB.NS', '3MINDIA.NS', 'BEL.NS', 'NHPC.NS', 'PETRONET.NS', 'ELECON.NS', 'ICICIBANK.NS', 'TATACOMM.NS', 'CENTRALBK.NS', 'TRENT.NS', 'BATAINDIA.NS', 'SONATSOFTW.NS', 'WIPRO.NS', 'OFSS.NS', 'JUSTDIAL.NS', 'GESHIP.NS', 'POWERINDIA.NS', 'APLAPOLLO.NS', 'SBIN.NS', 'CGPOWER.NS', 'TIINDIA.NS', 'TECHNOE.NS', 'MCX.NS', 'NATCOPHARM.NS', 'IPCALAB.NS', 'BAYERCROP.NS', 'MANYAVAR.NS', 'CUMMINSIND.NS', 'FORTIS.NS', 'BAJAJHLDNG.NS', 'SCHAEFFLER.NS', 'APOLLOTYRE.NS', 'GAIL.NS', 'BLS.NS', 'BASF.NS', 'INDIGO.NS', 'NTPC.NS', 'SYRMA.NS', 'HAVELLS.NS', 'NEULANDLAB.NS', 'TORNTPHARM.NS', 'SUNTV.NS', 'IEX.NS', 'ANANDRATHI.NS', 'ALIVUS.NS', 'TRITURBINE.NS', 'ULTRACEMCO.NS', 'NESTLEIND.NS', 'GMRAIRPORT.NS', 'CERA.NS', 'ONGC.NS', 'SUPREMEIND.NS', 'LLOYDSME.NS', 'PCBL.NS', 'HAL.NS', 'VTL.NS', 'KOTAKBANK.NS', 'TATACHEM.NS', 'ADANIPORTS.NS', 'HAPPSTMNDS.NS', 'ASAHIINDIA.NS', 'ICICIPRULI.NS', 'GPIL.NS', 'WESTLIFE.NS', 'AIIL.NS', 'ZENSARTECH.NS', 'CASTROLIND.NS', 'UBL.NS', 'ACC.NS', 'PFIZER.NS', 'DMART.NS', 'JBCHEPHARM.NS', 'IRB.NS', 'ABB.NS', 'KIRLOSBROS.NS', 'AIAENG.NS', 'UNITDSPR.NS', 'OLECTRA.NS', 'RAYMONDLSL.NS', 'HEG.NS', 'LINDEINDIA.NS', 'ATGL.NS', 'JKCEMENT.NS', 'PIDILITIND.NS', 'PTCIL.NS', 'CHAMBLFERT.NS', 'SOLARINDS.NS', 'THERMAX.NS', 'AARTIIND.NS', 'CANFINHOME.NS', 'GRAPHITE.NS', 'TITAN.NS', 'JSWINFRA.NS', 'ABREL.NS', 'CYIENT.NS', 'ACE.NS', 'BALRAMCHIN.NS', 'PAGEIND.NS', 'RAINBOW.NS', 'APOLLOHOSP.NS', 'FLUOROCHEM.NS', 'MARICO.NS', 'MANKIND.NS', 'GILLETTE.NS', 'KNRCON.NS', 'KEC.NS', 'UPL.NS', 'FACT.NS', 'NLCINDIA.NS', 'ITI.NS', 'DABUR.NS', 'AKUMS.NS', 'LT.NS', 'MRF.NS', 'GODIGIT.NS', 'AWL.NS', 'CREDITACC.NS', 'EIDPARRY.NS', 'PREMIERENE.NS', 'INFY.NS', 'SCI.NS', 'BBTC.NS', 'NEWGEN.NS', 'CCL.NS', 'MEDANTA.NS', 'COCHINSHIP.NS', 'LODHA.NS', 'SRF.NS', 'LTTS.NS', 'KIRLOSENG.NS', 'BALKRISIND.NS', 'GODREJCP.NS', 'PATANJALI.NS', 'OBEROIRLTY.NS', 'JYOTHYLAB.NS', 'METROPOLIS.NS', 'COROMANDEL.NS', 'GSPL.NS', 'APLLTD.NS', 'INDIACEM.NS', 'SAPPHIRE.NS', 'SAGILITY.NS', 'NAM-INDIA.NS', 'APARINDS.NS', 'HINDUNILVR.NS', 'RADICO.NS', 'ELGIEQUIP.NS', 'SYNGENE.NS', 'BHARTIHEXA.NS', 'TECHM.NS', 'RRKABEL.NS', 'TCS.NS', 'IGL.NS', 'KAJARIACER.NS', 'DOMS.NS', 'ZFCVINDIA.NS', 'ICICIGI.NS', 'HCLTECH.NS', 'COLPAL.NS', 'MASTEK.NS', 'TEJASNET.NS', 'ERIS.NS', 'CIPLA.NS', 'HONAUT.NS', 'SIEMENS.NS', 'BRIGADE.NS', 'ALKYLAMINE.NS', 'GNFC.NS', 'DBREALTY.NS', 'DIVISLAB.NS', 'COFORGE.NS', 'REDINGTON.NS', 'GODREJPROP.NS', 'ITC.NS', 'POLICYBZR.NS', 'MAHSEAMLES.NS', 'GUJGASLTD.NS', 'EMAMILTD.NS', 'INTELLECT.NS', 'FINPIPE.NS', 'ATUL.NS', 'JUBLINGREA.NS', 'RCF.NS', 'NAVINFLUOR.NS', 'UTIAMC.NS', 'LALPATHLAB.NS', 'MPHASIS.NS', 'KEI.NS', 'JINDALSAW.NS', 'RAMCOCEM.NS', 'PIIND.NS', 'TORNTPOWER.NS', 'SOBHA.NS', 'SUMICHEM.NS', 'PRESTIGE.NS', 'NIACL.NS', 'DEEPAKFERT.NS', 'NH.NS', 'GLAXO.NS', 'ABBOTINDIA.NS', 'PERSISTENT.NS', 'FSL.NS', 'ECLERX.NS', 'VBL.NS', 'OLAELEC.NS'
+        'NETWEB.NS', 'FIRSTCRY.NS', 'GMDCLTD.NS', 'IDEA.NS', 'SKFINDIA.NS', 'GODFRYPHLP.NS', 'RTNINDIA.NS', 'JPPOWER.NS', 'BSE.NS', 'SCHNEIDER.NS', 'NIVABUPA.NS', 'RBLBANK.NS', 'INDUSTOWER.NS', 'SWIGGY.NS', 'ABFRL.NS', 'BEML.NS', 'INDGN.NS', 'APTUS.NS', 'GLENMARK.NS', 'CUB.NS', 'COHANCE.NS', 'KFINTECH.NS', 'CLEAN.NS', 'NATIONALUM.NS', 'ASHOKLEY.NS', 'GODREJAGRO.NS', 'MSUMI.NS', 'ASTRAL.NS', 'GRAVITA.NS', 'CENTURYPLY.NS', 'LEMONTREE.NS', 'RENUKA.NS', 'M&MFIN.NS', 'EICHERMOT.NS', 'HYUNDAI.NS', 'M&M.NS', 'VEDL.NS', 'MMTC.NS', 'VOLTAS.NS', 'CHOLAFIN.NS', 'PNCINFRA.NS', 'GODREJIND.NS', 'CAMPUS.NS', 'CAMS.NS', 'EXIDEIND.NS', 'KARURVYSYA.NS', 'VIJAYA.NS', 'NSLNISP.NS', 'BIOCON.NS', 'ARE&M.NS', 'IGIL.NS', 'ANGELONE.NS', 'SWANCORP.NS', 'IRFC.NS', 'SHRIRAMFIN.NS', 'MARUTI.NS', 'ESCORTS.NS', 'IRCON.NS', 'IOB.NS', 'SARDAEN.NS', 'NMDC.NS', 'TBOTEK.NS', 'PPLPHARMA.NS', 'VGUARD.NS', 'JSL.NS', 'RITES.NS', 'JYOTICNC.NS', 'NYKAA.NS', 'MRPL.NS', 'TTML.NS', 'GVT&D.NS', 'HBLENGINE.NS', 'RHIM.NS', 'SAIL.NS', 'SAILIFE.NS', 'MAHABANK.NS', 'PHOENIXLTD.NS', 'DRREDDY.NS', 'UNOMINDA.NS', 'CHENNPETRO.NS', 'POWERGRID.NS', 'IREDA.NS', 'TVSMOTOR.NS', 'AMBER.NS', 'BDL.NS', 'TANLA.NS', 'AFFLE.NS', 'JMFINANCIL.NS', 'WELSPUNLIV.NS', 'PNBHOUSING.NS', 'ABCAPITAL.NS', 'PVRINOX.NS', 'JSWHL.NS', 'KAYNES.NS', 'JBMA.NS', 'PRAJIND.NS', 'RELIANCE.NS', 'ZEEL.NS', 'INOXWIND.NS', 'AEGISLOG.NS', 'LTF.NS', 'PFC.NS', 'AUROPHARMA.NS', 'NUVAMA.NS', 'AAVAS.NS', 'CANBK.NS', 'ENGINERSIN.NS', 'PAYTM.NS', 'J&KBANK.NS', 'ROUTE.NS', 'FIVESTAR.NS', 'DATAPATTNS.NS', 'CDSL.NS', 'ETERNAL.NS', 'NBCC.NS', 'NAUKRI.NS', 'LAURUSLABS.NS', 'AADHARHFC.NS', 'KPITTECH.NS', 'CHALET.NS', 'RVNL.NS', 'LTFOODS.NS', 'SUZLON.NS', 'TATAMOTORS.NS', 'CHOLAHLDNG.NS', 'IIFL.NS', 'BHEL.NS', 'JKTYRE.NS', 'GLAND.NS', 'SBILIFE.NS', 'TATAPOWER.NS', 'TATAELXSI.NS', 'HINDALCO.NS', 'HINDCOPPER.NS', 'HOMEFIRST.NS', 'SAMMAANCAP.NS', 'HINDZINC.NS', 'AJANTPHARM.NS', 'UCOBANK.NS', 'HDFCLIFE.NS', 'IKS.NS', 'BHARATFORG.NS', 'IFCI.NS', 'SONACOMS.NS', 'YESBANK.NS', 'OIL.NS', 'ANANTRAJ.NS', 'RECLTD.NS', 'BHARTIARTL.NS', 'BANKINDIA.NS', 'ALKEM.NS', 'SIGNATURE.NS', 'RPOWER.NS', 'SJVN.NS', 'GRSE.NS', 'MFSL.NS', 'KPIL.NS', 'SUNPHARMA.NS', 'BAJAJFINSV.NS', 'NTPCGREEN.NS', 'MANAPPURAM.NS', 'CAPLIPOINT.NS', 'SHYAMMETL.NS', '360ONE.NS', 'TATASTEEL.NS', 'WAAREEENER.NS', 'TITAGARH.NS', 'IDFCFIRSTB.NS', 'BANDHANBNK.NS', 'RAYMOND.NS', 'AXISBANK.NS', 'BERGEPAINT.NS', 'ASIANPAINT.NS', 'BSOFT.NS', 'HUDCO.NS', 'MAXHEALTH.NS', 'JUBLPHARMA.NS', 'FINCABLES.NS', 'JUBLFOOD.NS', 'USHAMART.NS', 'UNIONBANK.NS', 'MINDACORP.NS', 'INDUSINDBK.NS', 'HDFCAMC.NS', 'CONCOR.NS', 'COALINDIA.NS', 'PEL.NS', 'VMM.NS', 'ENDURANCE.NS', 'IRCTC.NS', 'WOCKPHARMA.NS', 'TRIVENI.NS', 'DEVYANI.NS', 'BOSCHLTD.NS', 'RAILTEL.NS', 'BANKBARODA.NS', 'TARIL.NS', 'BLUEDART.NS', 'HEROMOTOCO.NS', 'TATACONSUM.NS', 'MOTILALOFS.NS', 'FEDERALBNK.NS', 'POLYMED.NS', 'JSWENERGY.NS', 'NETWORK18.NS', 'SUNDARMFIN.NS', 'ABSLAMC.NS', 'ACMESOLAR.NS', 'ZYDUSLIFE.NS', 'ZENTEC.NS', 'IOC.NS', 'CEATLTD.NS', 'KANSAINER.NS', 'ADANIPOWER.NS', 'BAJAJHFL.NS', 'KIMS.NS', 'BAJFINANCE.NS', 'LUPIN.NS', 'EMCURE.NS', 'ASTERDM.NS', 'JSWSTEEL.NS', 'GPPL.NS', 'WELCORP.NS', 'PNB.NS', 'STARHEALTH.NS', 'JIOFIN.NS', 'MAZDOCK.NS', 'CESC.NS', 'INDHOTEL.NS', 'ADANIENT.NS', 'LICHSGFIN.NS', 'HDFCBANK.NS', 'INDIANB.NS', 'TATAINVEST.NS', 'MUTHOOTFIN.NS', 'KALYANKJIL.NS', 'SBICARD.NS', 'ALOKINDS.NS', 'SAREGAMA.NS', 'BPCL.NS', 'LTIM.NS', 'ADANIGREEN.NS', 'ASTRAZEN.NS', 'MOTHERSON.NS', 'PGEL.NS', 'INDIAMART.NS', 'CRAFTSMAN.NS', 'DALBHARAT.NS', 'JINDALSTEL.NS', 'AUBANK.NS', 'IDBI.NS', 'BAJAJ-AUTO.NS', 'WHIRLPOOL.NS', 'DEEPAKNTR.NS', 'SUNDRMFAST.NS', 'CONCORDBIO.NS', 'SBFC.NS', 'HFCL.NS', 'MAPMYINDIA.NS', 'RKFORGE.NS', 'GICRE.NS', 'CGCL.NS', 'JWL.NS', 'POONAWALLA.NS', 'KPRMILL.NS', 'CRISIL.NS', 'SWSOLAR.NS', 'NCC.NS', 'BRITANNIA.NS', 'AFCONS.NS', 'INOXINDIA.NS', 'HSCL.NS', 'DIXON.NS', 'BIKAJI.NS', 'BLUESTARCO.NS', 'GRASIM.NS', 'EIHOTEL.NS', 'TRIDENT.NS', 'GRANULES.NS', 'LICI.NS', 'HONASA.NS', 'ADANIENSOL.NS', 'AMBUJACEM.NS', 'SHREECEM.NS', 'LATENTVIEW.NS', 'CARBORUNIV.NS', 'DELHIVERY.NS', 'TIMKEN.NS', 'DCMSHRIRAM.NS', 'DLF.NS', 'CROMPTON.NS', 'HINDPETRO.NS', 'TATATECH.NS', 'NAVA.NS', 'MGL.NS', 'POLYCAB.NS', '3MINDIA.NS', 'BEL.NS', 'NHPC.NS', 'PETRONET.NS', 'ELECON.NS', 'ICICIBANK.NS', 'TATACOMM.NS', 'CENTRALBK.NS', 'TRENT.NS', 'BATAINDIA.NS', 'SONATSOFTW.NS', 'WIPRO.NS', 'OFSS.NS', 'JUSTDIAL.NS', 'GESHIP.NS', 'POWERINDIA.NS', 'APLAPOLLO.NS', 'SBIN.NS', 'CGPOWER.NS', 'TIINDIA.NS', 'TECHNOE.NS', 'MCX.NS', 'NATCOPHARM.NS', 'IPCALAB.NS', 'BAYERCROP.NS', 'MANYAVAR.NS', 'CUMMINSIND.NS', 'FORTIS.NS', 'BAJAJHLDNG.NS', 'SCHAEFFLER.NS', 'APOLLOTYRE.NS', 'GAIL.NS', 'BLS.NS', 'BASF.NS', 'INDIGO.NS', 'NTPC.NS', 'SYRMA.NS', 'HAVELLS.NS', 'NEULANDLAB.NS', 'TORNTPHARM.NS', 'SUNTV.NS', 'IEX.NS', 'ANANDRATHI.NS', 'ALIVUS.NS', 'TRITURBINE.NS', 'ULTRACEMCO.NS', 'NESTLEIND.NS', 'GMRAIRPORT.NS', 'CERA.NS', 'ONGC.NS', 'SUPREMEIND.NS', 'LLOYDSME.NS', 'PCBL.NS', 'HAL.NS', 'VTL.NS', 'KOTAKBANK.NS', 'TATACHEM.NS', 'ADANIPORTS.NS', 'HAPPSTMNDS.NS', 'ASAHIINDIA.NS', 'ICICIPRULI.NS', 'GPIL.NS', 'WESTLIFE.NS', 'AIIL.NS', 'ZENSARTECH.NS', 'CASTROLIND.NS', 'UBL.NS', 'ACC.NS', 'PFIZER.NS', 'DMART.NS', 'JBCHEPHARM.NS', 'IRB.NS', 'ABB.NS', 'KIRLOSBROS.NS', 'AIAENG.NS', 'UNITDSPR.NS', 'OLECTRA.NS', 'RAYMONDLSL.NS', 'HEG.NS', 'LINDEINDIA.NS', 'ATGL.NS', 'JKCEMENT.NS', 'PIDILITIND.NS', 'PTCIL.NS', 'CHAMBLFERT.NS', 'SOLARINDS.NS', 'THERMAX.NS', 'AARTIIND.NS', 'CANFINHOME.NS', 'GRAPHITE.NS', 'TITAN.NS', 'JSWINFRA.NS', 'ABREL.NS', 'CYIENT.NS', 'ACE.NS', 'BALRAMCHIN.NS', 'PAGEIND.NS', 'RAINBOW.NS', 'APOLLOHOSP.NS', 'FLUOROCHEM.NS', 'MARICO.NS', 'MANKIND.NS', 'GILLETTE.NS', 'KNRCON.NS', 'KEC.NS', 'UPL.NS', 'FACT.NS', 'NLCINDIA.NS', 'ITI.NS', 'DABUR.NS', 'AKUMS.NS', 'LT.NS', 'MRF.NS', 'GODIGIT.NS', 'AWL.NS', 'CREDITACC.NS', 'EIDPARRY.NS', 'PREMIERENE.NS', 'INFY.NS', 'SCI.NS', 'BBTC.NS', 'NEWGEN.NS', 'CCL.NS', 'MEDANTA.NS', 'COCHINSHIP.NS', 'LODHA.NS', 'SRF.NS', 'LTTS.NS', 'KIRLOSENG.NS', 'BALKRISIND.NS', 'GODREJCP.NS', 'PATANJALI.NS', 'OBEROIRLTY.NS', 'JYOTHYLAB.NS', 'METROPOLIS.NS', 'COROMANDEL.NS', 'GSPL.NS', 'APLLTD.NS', 'INDIACEM.NS', 'SAPPHIRE.NS', 'SAGILITY.NS', 'NAM-INDIA.NS', 'APARINDS.NS', 'HINDUNILVR.NS', 'RADICO.NS', 'ELGIEQUIP.NS', 'SYNGENE.NS', 'BHARTIHEXA.NS', 'TECHM.NS', 'RRKABEL.NS', 'TCS.NS', 'IGL.NS', 'KAJARIACER.NS', 'DOMS.NS', 'ZFCVINDIA.NS', 'ICICIGI.NS', 'HCLTECH.NS', 'COLPAL.NS', 'MASTEK.NS', 'TEJASNET.NS', 'ERIS.NS', 'CIPLA.NS', 'HONAUT.NS', 'SIEMENS.NS', 'BRIGADE.NS', 'ALKYLAMINE.NS', 'GNFC.NS', 'DBREALTY.NS', 'DIVISLAB.NS', 'COFORGE.NS', 'REDINGTON.NS', 'GODREJPROP.NS', 'ITC.NS', 'POLICYBZR.NS', 'MAHSEAMLES.NS', 'GUJGASLTD.NS', 'EMAMILTD.NS', 'INTELLECT.NS', 'FINPIPE.NS', 'ATUL.NS', 'JUBLINGREA.NS', 'RCF.NS', 'NAVINFLUOR.NS', 'UTIAMC.NS', 'LALPATHLAB.NS', 'MPHASIS.NS', 'KEI.NS', 'JINDALSAW.NS', 'RAMCOCEM.NS', 'PIIND.NS', 'TORNTPOWER.NS', 'SOBHA.NS', 'SUMICHEM.NS', 'PRESTIGE.NS', 'NIACL.NS', 'DEEPAKFERT.NS', 'NH.NS', 'GLAXO.NS', 'ABBOTINDIA.NS', 'PERSISTENT.NS', 'FSL.NS', 'ECLERX.NS', 'VBL.NS', 'OLAELEC.NS'
     ]
     return symbols
 
@@ -76,21 +73,29 @@ def calculate_obv(df):
 def download_and_screen_stocks(symbols, adx_thresh, max_risk_pct, atr_mult):
     """Download data and screen stocks based on criteria"""
     screened_data = []
+    debug_data = []
     progress_bar = st.progress(0)
     status_text = st.empty()
     
     total_symbols = len(symbols)
+    processed_count = 0
+    successful_downloads = 0
+    criteria_failures = {}
     
     for idx, symbol in enumerate(symbols):
         try:
             status_text.text(f'Processing {symbol} ({idx+1}/{total_symbols})')
+            processed_count += 1
             
             # Download data
             df = yf.download(symbol, period="150d", interval="1d", progress=False)
             
             if df.empty or len(df) < 50:
+                debug_data.append({'Symbol': symbol, 'Issue': 'No data or insufficient data'})
                 continue
                 
+            successful_downloads += 1
+            
             # Calculate indicators
             adx_indicator = ADXIndicator(high=df['High'], low=df['Low'], close=df['Close'], window=14)
             df['ADX14'] = adx_indicator.adx()
@@ -110,17 +115,28 @@ def download_and_screen_stocks(symbols, adx_thresh, max_risk_pct, atr_mult):
             df = df.dropna()
             
             if df.empty:
+                debug_data.append({'Symbol': symbol, 'Issue': 'No data after indicator calculation'})
                 continue
                 
             latest = df.iloc[-1]
             
+            # Debug: Track individual criteria failures
+            criteria_check = {}
+            criteria_check['ADX > threshold'] = latest['ADX14'] > adx_thresh
+            criteria_check['20DMA > 50DMA'] = latest['DMA20'] > latest['DMA50']
+            criteria_check['Close < 20DMA'] = latest['Close'] < latest['DMA20']
+            criteria_check['OBV > OBV_MA20'] = latest['OBV'] > latest['OBV_MA20']
+            criteria_check['+DI > -DI'] = latest['PLUS_DI'] > latest['MINUS_DI']
+            
+            # Track criteria failures for debugging
+            for criteria, passed in criteria_check.items():
+                if not passed:
+                    if criteria not in criteria_failures:
+                        criteria_failures[criteria] = 0
+                    criteria_failures[criteria] += 1
+            
             # Screening criteria
-            if (latest['ADX14'] > adx_thresh and
-                latest['DMA20'] > latest['DMA50'] and
-                latest['Close'] < latest['DMA20'] and
-                latest['OBV'] > latest['OBV_MA20'] and
-                latest['PLUS_DI'] > latest['MINUS_DI']):
-                
+            if all(criteria_check.values()):
                 # Risk calculation based on 50 DMA and ATR
                 price = latest['Close']
                 estimated_stop_loss = latest['DMA50'] - (latest['ATR'] * atr_mult)
@@ -130,7 +146,7 @@ def download_and_screen_stocks(symbols, adx_thresh, max_risk_pct, atr_mult):
                 if estimated_risk_per_share > 0:
                     risk_percentage = (estimated_risk_per_share / price) * 100
                     
-                    # Check risk percentage condition (< 10% to be included)
+                    # Check risk percentage condition
                     if risk_percentage < max_risk_pct:
                         percentage_diff = ((latest['Close'] - latest['DMA20']) / latest['DMA20']) * 100
                         
@@ -148,9 +164,16 @@ def download_and_screen_stocks(symbols, adx_thresh, max_risk_pct, atr_mult):
                             '+DI': round(latest['PLUS_DI'], 2),
                             '-DI': round(latest['MINUS_DI'], 2)
                         })
+                    else:
+                        debug_data.append({'Symbol': symbol, 'Issue': f'Risk % too high: {risk_percentage:.2f}%'})
+                else:
+                    debug_data.append({'Symbol': symbol, 'Issue': 'Negative risk (stop loss above current price)'})
+            else:
+                failed_criteria = [k for k, v in criteria_check.items() if not v]
+                debug_data.append({'Symbol': symbol, 'Issue': f'Failed criteria: {", ".join(failed_criteria)}'})
         
         except Exception as e:
-            st.error(f"Error processing {symbol}: {str(e)}")
+            debug_data.append({'Symbol': symbol, 'Issue': f'Error: {str(e)}'})
             continue
         
         # Update progress
@@ -158,6 +181,26 @@ def download_and_screen_stocks(symbols, adx_thresh, max_risk_pct, atr_mult):
     
     progress_bar.empty()
     status_text.empty()
+    
+    # Display debug information
+    st.subheader("🔍 Screening Debug Information")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("Total Processed", processed_count)
+    with col2:
+        st.metric("Successful Downloads", successful_downloads)
+    with col3:
+        st.metric("Stocks Found", len(screened_data))
+    
+    if criteria_failures:
+        st.subheader("Common Criteria Failures")
+        failure_df = pd.DataFrame(list(criteria_failures.items()), columns=['Criteria', 'Failed Count'])
+        st.dataframe(failure_df)
+    
+    if debug_data:
+        st.subheader("Sample Issues (First 20)")
+        debug_df = pd.DataFrame(debug_data[:20])
+        st.dataframe(debug_df)
     
     return pd.DataFrame(screened_data)
 
