@@ -1,3 +1,5 @@
+
+
 import streamlit as st
 import pandas as pd
 import yfinance as yf
@@ -26,15 +28,14 @@ This screener identifies stocks from NIFTY 500 based on technical indicators:
 - **Close < 20 DMA** (Potential pullback entry)
 - **OBV > OBV MA20** (Volume confirmation)
 - **+DI > -DI** (Bullish momentum)
-- **Risk/Reward Ratio ≥ 1.5**
+- **Risk Percentage < 10%** (Based on 50 DMA - ATR stop loss)
 """)
 
 # Sidebar for parameters
 st.sidebar.header("📊 Screening Parameters")
 adx_threshold = st.sidebar.slider("ADX Threshold", 15, 40, 25)
-min_risk_reward = st.sidebar.slider("Minimum Risk/Reward Ratio", 1.0, 3.0, 1.5)
+max_risk_percentage = st.sidebar.slider("Maximum Risk Percentage", 3.0, 15.0, 10.0)
 atr_multiplier = st.sidebar.slider("ATR Multiplier (Stop Loss)", 1.0, 3.0, 1.5)
-target_multiplier = st.sidebar.slider("Target ATR Multiplier", 2.0, 5.0, 3.0)
 
 # Custom CSS for better styling
 st.markdown("""
@@ -72,7 +73,7 @@ def calculate_obv(df):
     return pd.Series(obv, index=df.index)
 
 @st.cache_data(ttl=3600)  # Cache for 1 hour
-def download_and_screen_stocks(symbols, adx_thresh, min_rr, atr_mult, target_mult):
+def download_and_screen_stocks(symbols, adx_thresh, max_risk_pct, atr_mult):
     """Download data and screen stocks based on criteria"""
     screened_data = []
     progress_bar = st.progress(0)
@@ -120,33 +121,33 @@ def download_and_screen_stocks(symbols, adx_thresh, min_rr, atr_mult, target_mul
                 latest['OBV'] > latest['OBV_MA20'] and
                 latest['PLUS_DI'] > latest['MINUS_DI']):
                 
-                # Risk/Reward calculation
-                entry_price = latest['DMA20']
-                stop_price = entry_price - (latest['ATR'] * atr_mult)
-                target_price = entry_price + (latest['ATR'] * target_mult)
+                # Risk calculation based on 50 DMA and ATR
+                price = latest['Close']
+                estimated_stop_loss = latest['DMA50'] - (latest['ATR'] * atr_mult)
+                estimated_risk_per_share = price - estimated_stop_loss
                 
-                risk = entry_price - stop_price
-                reward = target_price - entry_price
-                rr_ratio = reward / risk if risk > 0 else 0
-                
-                if rr_ratio >= min_rr:
-                    percentage_diff = ((latest['Close'] - latest['DMA20']) / latest['DMA20']) * 100
+                # Ensure estimated_risk_per_share is positive for meaningful Risk %
+                if estimated_risk_per_share > 0:
+                    risk_percentage = (estimated_risk_per_share / price) * 100
                     
-                    screened_data.append({
-                        'Symbol': symbol.replace('.NS', ''),
-                        'LTP': round(latest['Close'], 2),
-                        'ADX14': round(latest['ADX14'], 2),
-                        'DMA20': round(latest['DMA20'], 2),
-                        'DMA50': round(latest['DMA50'], 2),
-                        'ATR': round(latest['ATR'], 2),
-                        'Entry': round(entry_price, 2),
-                        'Stop Loss': round(stop_price, 2),
-                        'Target': round(target_price, 2),
-                        'Risk/Reward': round(rr_ratio, 2),
-                        'LTP vs 20DMA %': round(percentage_diff, 2),
-                        '+DI': round(latest['PLUS_DI'], 2),
-                        '-DI': round(latest['MINUS_DI'], 2)
-                    })
+                    # Check risk percentage condition (< 10% to be included)
+                    if risk_percentage < max_risk_pct:
+                        percentage_diff = ((latest['Close'] - latest['DMA20']) / latest['DMA20']) * 100
+                        
+                        screened_data.append({
+                            'Symbol': symbol.replace('.NS', ''),
+                            'LTP': round(latest['Close'], 2),
+                            'ADX14': round(latest['ADX14'], 2),
+                            'DMA20': round(latest['DMA20'], 2),
+                            'DMA50': round(latest['DMA50'], 2),
+                            'ATR': round(latest['ATR'], 2),
+                            'Stop Loss': round(estimated_stop_loss, 2),
+                            'Risk %': round(risk_percentage, 2),
+                            'Risk Amount': round(estimated_risk_per_share, 2),
+                            'LTP vs 20DMA %': round(percentage_diff, 2),
+                            '+DI': round(latest['PLUS_DI'], 2),
+                            '-DI': round(latest['MINUS_DI'], 2)
+                        })
         
         except Exception as e:
             st.error(f"Error processing {symbol}: {str(e)}")
@@ -221,8 +222,7 @@ def main():
     if st.button("🔍 Run Screening", type="primary"):
         with st.spinner("Screening stocks... This may take a few minutes."):
             results_df = download_and_screen_stocks(
-                symbols, adx_threshold, min_risk_reward, 
-                atr_multiplier, target_multiplier
+                symbols, adx_threshold, max_risk_percentage, atr_multiplier
             )
         
         if not results_df.empty:
@@ -239,9 +239,9 @@ def main():
         with col1:
             st.metric("Stocks Found", len(results_df))
         with col2:
-            st.metric("Avg Risk/Reward", f"{results_df['Risk/Reward'].mean():.2f}")
+            st.metric("Avg Risk %", f"{results_df['Risk %'].mean():.2f}%")
         with col3:
-            st.metric("Best R/R Ratio", f"{results_df['Risk/Reward'].max():.2f}")
+            st.metric("Lowest Risk %", f"{results_df['Risk %'].min():.2f}%")
         with col4:
             st.metric("Avg ADX", f"{results_df['ADX14'].mean():.1f}")
         
@@ -251,7 +251,7 @@ def main():
         # Sort options
         sort_by = st.selectbox(
             "Sort by:", 
-            ['Risk/Reward', 'ADX14', 'LTP vs 20DMA %', 'Symbol']
+            ['Risk %', 'ADX14', 'LTP vs 20DMA %', 'Symbol']
         )
         ascending = st.checkbox("Ascending order")
         
@@ -292,6 +292,7 @@ def main():
         - **Close < 20 DMA**: Shows pullback for potential entry
         - **OBV > OBV MA**: Volume supports the move
         - **+DI > -DI**: Bullish directional movement
+        - **Risk % < 10%**: Stop loss at 50 DMA - (ATR × multiplier) keeps risk manageable
         """)
 
 if __name__ == "__main__":
