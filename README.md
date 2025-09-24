@@ -2,6 +2,8 @@
 
 A Streamlit web application for screening NIFTY 500 stocks based on technical analysis indicators.
 
+👉 **Live Demo**: [Streamlit App](https://momentum-stratergy-screener-d94cizdzxhjz5rullqshapp.streamlit.app/)
+
 ## Features
 
 - **Technical Screening**: Filters stocks based on ADX, Moving Averages, OBV, and Directional Movement
